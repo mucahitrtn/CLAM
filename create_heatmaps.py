@@ -13,7 +13,6 @@ from utils.utils import *
 from math import floor
 from utils.eval_utils import initiate_model as initiate_model
 from models.model_clam import CLAM_MB, CLAM_SB
-from models.model_abmil import ABMIL
 from models import get_encoder
 from types import SimpleNamespace
 from collections import namedtuple
@@ -36,7 +35,7 @@ device=torch.device("cuda" if torch.cuda.is_available() else "cpu")
 def infer_single_slide(model, features, label, reverse_label_dict, k=1):
     features = features.to(device)
     with torch.inference_mode():
-        if isinstance(model, (CLAM_SB, CLAM_MB, ABMIL)):
+        if isinstance(model, (CLAM_SB, CLAM_MB)):
             model_results_dict = model(features)
             logits, Y_prob, Y_hat, A, _ = model(features)
             Y_hat = Y_hat.item()

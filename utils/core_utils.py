@@ -5,8 +5,6 @@ import os
 from dataset_modules.dataset_generic import save_splits
 from models.model_mil import MIL_fc, MIL_fc_mc
 from models.model_clam import CLAM_MB, CLAM_SB
-from models.model_abmil import ABMIL
-from models.model_transmil import TransMIL
 from sklearn.preprocessing import label_binarize
 from sklearn.metrics import roc_auc_score, roc_curve
 from sklearn.metrics import auc as calc_auc
@@ -130,7 +128,7 @@ def train(datasets, cur, args):
                   'n_classes': args.n_classes, 
                   "embed_dim": args.embed_dim}
     
-    if args.model_size is not None and args.model_type not in ['mil', 'transmil', 'abmil']:
+    if args.model_size is not None and args.model_type != 'mil':
         model_dict.update({"size_arg": args.model_size})
     
     if args.model_type in ['clam_sb', 'clam_mb']:
@@ -155,11 +153,7 @@ def train(datasets, cur, args):
         else:
             raise NotImplementedError
     
-    elif args.model_type == 'abmil':
-        model = ABMIL(**model_dict)
-    elif args.model_type == 'transmil':
-        model = TransMIL(n_classes=args.n_classes, input_dim=args.embed_dim)
-    else:  # args.model_type == 'mil'
+    else: # args.model_type == 'mil'
         if args.n_classes > 2:
             model = MIL_fc_mc(**model_dict)
         else:
